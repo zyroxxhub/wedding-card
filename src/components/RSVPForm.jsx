@@ -1,8 +1,23 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 export default function RSVPForm() {
+
+  const [selected, setSelected] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubmit = () => {
+
+    if (!selected) return;
+
+    setSubmitted(true);
+
+    setTimeout(() => {
+      setSubmitted(false);
+    }, 4000);
+  };
 
   return (
     <section className="relative py-32 px-4 sm:px-6 overflow-hidden">
@@ -20,6 +35,53 @@ export default function RSVPForm() {
         opacity-20
         blur-[180px]
       " />
+
+      {/* Floating Hearts */}
+      <AnimatePresence>
+
+        {submitted && (
+          <>
+            {[...Array(20)].map((_, i) => (
+
+              <motion.div
+                key={i}
+                initial={{
+                  opacity: 1,
+                  y: 0,
+                  x: 0,
+                  scale: 0.5,
+                }}
+                animate={{
+                  opacity: 0,
+                  y: -400,
+                  x: (Math.random() - 0.5) * 500,
+                  scale: 1.5,
+                  rotate: Math.random() * 360,
+                }}
+                exit={{
+                  opacity: 0,
+                }}
+                transition={{
+                  duration: 3,
+                  delay: i * 0.05,
+                }}
+                className="
+                  fixed
+                  left-1/2
+                  top-1/2
+                  text-4xl
+                  z-[999]
+                  pointer-events-none
+                "
+              >
+                ❤️
+              </motion.div>
+
+            ))}
+          </>
+        )}
+
+      </AnimatePresence>
 
       {/* Heading */}
       <motion.div
@@ -40,7 +102,7 @@ export default function RSVPForm() {
 
       </motion.div>
 
-      {/* RSVP Container */}
+      {/* RSVP Card */}
       <motion.div
         initial={{ opacity: 0, y: 100 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -63,12 +125,12 @@ export default function RSVPForm() {
 
         <div className="space-y-8">
 
-          {/* Question */}
+          {/* Heading */}
           <div className="text-center">
 
             <h2 className="
               text-3xl
-              md:text-4xl
+              md:text-5xl
               font-bold
               text-white
             ">
@@ -94,105 +156,108 @@ export default function RSVPForm() {
           ">
 
             {/* YES */}
-            <motion.label
+            <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="flex-1 cursor-pointer"
+              onClick={() => setSelected("yes")}
+              className={`
+                flex-1
+                cursor-pointer
+                rounded-3xl
+                p-8
+                text-center
+                border
+                transition
+                duration-500
+                ${
+                  selected === "yes"
+                    ? "bg-gradient-to-r from-pink-500 to-rose-500 border-pink-300 shadow-[0_0_40px_rgba(255,105,180,0.4)]"
+                    : "bg-black/30 border-white/10"
+                }
+              `}
             >
 
-              <input
-                type="radio"
-                name="attendance"
-                className="hidden peer"
-              />
+              <motion.div
+                animate={{
+                  scale: selected === "yes" ? [1, 1.2, 1] : 1,
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 1.5,
+                }}
+                className="text-6xl mb-5"
+              >
+                💖
+              </motion.div>
 
-              <div className="
-                py-6
-                rounded-3xl
-                text-center
-                bg-black/30
-                border
-                border-white/10
+              <h3 className="
+                text-3xl
+                font-bold
                 text-white
-                transition
-                duration-300
-                peer-checked:bg-gradient-to-r
-                peer-checked:from-pink-500
-                peer-checked:to-rose-500
-                peer-checked:border-pink-400
-                peer-checked:shadow-[0_0_40px_rgba(255,105,180,0.4)]
               ">
+                Yes
+              </h3>
 
-                <div className="text-5xl mb-4">
-                  💖
-                </div>
+              <p className="
+                mt-3
+                text-gray-200
+              ">
+                I’ll Be There
+              </p>
 
-                <h3 className="
-                  text-2xl
-                  font-bold
-                ">
-                  Yes
-                </h3>
-
-                <p className="
-                  mt-2
-                  text-gray-200
-                ">
-                  I’ll Be There
-                </p>
-
-              </div>
-
-            </motion.label>
+            </motion.div>
 
             {/* NO */}
-            <motion.label
+            <motion.div
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
-              className="flex-1 cursor-pointer"
+              onClick={() => setSelected("no")}
+              className={`
+                flex-1
+                cursor-pointer
+                rounded-3xl
+                p-8
+                text-center
+                border
+                transition
+                duration-500
+                ${
+                  selected === "no"
+                    ? "bg-white/10 border-white/30"
+                    : "bg-black/30 border-white/10"
+                }
+              `}
             >
 
-              <input
-                type="radio"
-                name="attendance"
-                className="hidden peer"
-              />
+              <motion.div
+                animate={{
+                  rotate: selected === "no" ? [0, -10, 10, 0] : 0,
+                }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 2,
+                }}
+                className="text-6xl mb-5"
+              >
+                🌸
+              </motion.div>
 
-              <div className="
-                py-6
-                rounded-3xl
-                text-center
-                bg-black/30
-                border
-                border-white/10
+              <h3 className="
+                text-3xl
+                font-bold
                 text-white
-                transition
-                duration-300
-                peer-checked:bg-white/10
-                peer-checked:border-white/30
               ">
+                Sorry
+              </h3>
 
-                <div className="text-5xl mb-4">
-                  🌸
-                </div>
+              <p className="
+                mt-3
+                text-gray-300
+              ">
+                Can't Attend
+              </p>
 
-                <h3 className="
-                  text-2xl
-                  font-bold
-                ">
-                  Sorry
-                </h3>
-
-                <p className="
-                  mt-2
-                  text-gray-300
-                ">
-                  Can't Attend
-                </p>
-
-              </div>
-
-            </motion.label>
+            </motion.div>
 
           </div>
 
@@ -202,9 +267,12 @@ export default function RSVPForm() {
               scale: 1.02,
             }}
             whileTap={{
-              scale: 0.98,
+              scale: 0.95,
             }}
+            onClick={handleSubmit}
             className="
+              relative
+              overflow-hidden
               w-full
               py-5
               rounded-2xl
@@ -218,9 +286,83 @@ export default function RSVPForm() {
             "
           >
 
-            Confirm Response ❤️
+            {/* Shine */}
+            <motion.div
+              animate={{
+                x: ["-100%", "200%"],
+              }}
+              transition={{
+                repeat: Infinity,
+                duration: 2,
+              }}
+              className="
+                absolute
+                inset-0
+                bg-gradient-to-r
+                from-transparent
+                via-white/20
+                to-transparent
+                skew-x-12
+              "
+            />
+
+            <span className="relative z-10">
+              Confirm Response ❤️
+            </span>
 
           </motion.button>
+
+          {/* Success Animation */}
+          <AnimatePresence>
+
+            {submitted && (
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  scale: 0.5,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                }}
+                exit={{
+                  opacity: 0,
+                  scale: 0.5,
+                }}
+                className="
+                  text-center
+                  pt-6
+                "
+              >
+
+                <motion.div
+                  animate={{
+                    scale: [1, 1.2, 1],
+                  }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1.5,
+                  }}
+                  className="text-7xl"
+                >
+                  🎉
+                </motion.div>
+
+                <h3 className="
+                  mt-4
+                  text-3xl
+                  font-bold
+                  text-pink-300
+                ">
+                  Thank You!
+                </h3>
+
+              </motion.div>
+
+            )}
+
+          </AnimatePresence>
 
         </div>
 
